@@ -13,7 +13,7 @@ db = require('./db')(); //hack
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
-var Movie = require('./movies');
+//var Movie = require('./movies');
 var app = express();
 
 app.use(cors());
