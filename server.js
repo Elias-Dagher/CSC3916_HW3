@@ -13,15 +13,15 @@ db = require('./db')(); //hack
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
-
+var Movie = require('./movies');
 var app = express();
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(passport.initialize());
-
 var router = express.Router();
+
 
 function getJSONObjectForMovieRequirement(req) {
     var json = {
@@ -84,70 +84,93 @@ router.post('/signin', function (req, res) {
         })
     })
 });
+
 //movies get method for getting a movie, saving a movie, updateing a movie, and deleting a movie.
 router.route('/movies')
-    .get(function(req, res) {
-        console.log(req.body);
-        res = res.status(200);
-        if (req.get("Content-Type")) {
-            console.log("Content-Type: " + req.get("Content-Type"));
-            res = res.type(req.get("Content-Type"));
+    //getting movies request to get the movies.
+    .get(authJwtController.isAuthenticated, function (req, res) {
+            Movie.find({Title: req.body.Title}, function(err, data){
+
+                if(data.length == 0){
+                    //if (req.get('Content-Type')) {
+                    //res = res.type(req.get('Content-Type'));
+                    //}
+                    //var o = getJSONObjectForMovieRequirement(req);
+                    //res.json(o);
+                    res.status(400).json({message: "No entry found"});
+
+                }else if(err) { res.status(400).json({message: "Invalid query"});
+                }else{
+                    //status: 200, message: "GET movies", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
+                    res.json({data: data, message: "Movie Found"});
+                }
+
+            });
         }
-        //if (req.get('Content-Type')) {
-        //res = res.type(req.get('Content-Type'));
-        //}
-        //var o = getJSONObjectForMovieRequirement(req);
-        //res.json(o);
-        res.send({
-            status: 200, message: "GET movies", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
-        });
+    )
+    //putting movies request to update movies
+    .put(authJwtController.isAuthenticated, function(req,res) {
+
+        if(req.body.Actors != null  && req.body.Year != null && req.body.Genre != null && req.body.Title != null && req.body.Actors.length >= 3){
+
+            Movie.findOneAndUpdate({Title:req.body.Search}, {
+                    Actors: req.body.Actors, Year: req.body.Year, Genre: req.body.Genre, Title: req.body.Title},function(err, doc){
+
+                    if(doc == null){res.json({message:"Cannot find movie..."})}
+                    else if (err){res.json({message: err});}
+                    else{  res.json({data: doc, message:"movie has been updated"})}
+                        //status: 200, message: "movie updated", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
+                });}
+
+        else { res.status(400).json({message: "empty entry..."}); }
+            //if (req.get('Content-Type')) {
+            //res = res.type(req.get('Content-Type'));
+            //}
+            //var o = getJSONObjectForMovieRequirement(req);
+            //res.json(o);
     })
-    .post(function(req, res) {
-        console.log(req.body);
-        res = res.status(200);
-        if (req.get("Content-Type")) {
-            console.log("Content-Type: " + req.get("Content-Type"));
-            res = res.type(req.get("Content-Type"));
-        }
-        //if (req.get('Content-Type')) {
-        //res = res.type(req.get('Content-Type'));
-        //}
-        //var o = getJSONObjectForMovieRequirement(req);
-        //res.json(o);
-        res.send({
-            status: 200, message: "movie saved", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
-        });
-    })
-    .put(function(req, res) {
-        console.log(req.body);
-        res = res.status(200);
-        if (req.get("Content-Type")) {
-            console.log("Content-Type: " + req.get("Content-Type"));
-            res = res.type(req.get("Content-Type"));
-        }
-        //if (req.get('Content-Type')) {
-        //res = res.type(req.get('Content-Type'));
-        //}
-        //var o = getJSONObjectForMovieRequirement(req);
-        //res.json(o);
-        res.send({
-            status: 200, message: "movie updated", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
-        });
-    })
-    .delete(authController.isAuthenticated, function(req, res) {
-        console.log(req.body);
-        res = res.status(200);
-        if (req.get("Content-Type")) {
-            console.log("Content-Type: " + req.get("Content-Type"));
-            res = res.type(req.get("Content-Type"));
-        }
-        //if (req.get('Content-Type')) {
-        //res = res.type(req.get('Content-Type'));
-        //}
-        //var o = getJSONObjectForMovieRequirement(req);
-        //res.json(o);
-        res.send({
-            status: 200, message: "movie deleted", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
+    //post movies request to save movies
+    .post(authJwtController.isAuthenticated, function (req, res) {
+
+            if(req.body.Actors.length < 3){res.status(400).json({message: "not enough entries (3 actors needed)..."});
+            }else{Movie.find({Title: req.body.Title},
+
+                function(err, data){
+                    if(err){res.status(400).json({message: "something went wrong..."});}
+                    else if(data.length == 0) {
+
+                        let mov = new Movie({Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre, Actors: req.body.Actors});
+                        console.log(req.body);
+
+                        mov.save(function(err){
+                            if(err) {res.json({message: err});
+                                // status: 200, message: "movie saved", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
+                            }else{res.json({msg: "movie saved..."});}});
+                    }
+                    else {res.status(400).json({message: "Movie duplicate, error..."});}
+                            //if (req.get('Content-Type')) {
+                            //res = res.type(req.get('Content-Type'));
+                            //}
+                            //var o = getJSONObjectForMovieRequirement(req);
+                            //res.json(o);
+                });
+            }
+        })
+
+    //delete movies request to delete movies
+    .delete(authJwtController.isAuthenticated, function(req,res){
+
+        Movie.findOneAndDelete({Title: req.body.Title}, function(err, doc){
+            if(err){ res.status(400).json({message:err});}
+                //if (req.get('Content-Type')) {
+                 //res = res.type(req.get('Content-Type'));
+                 //}
+                //var o = getJSONObjectForMovieRequirement(req);
+                //res.json(o);
+            else if (doc == null){res.json({message: "cannot find movie..."});}
+            else{res.json({message: "movie deleted..."});
+               //status: 200, message: "movie deleted", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
+            }
         });
     });
 
