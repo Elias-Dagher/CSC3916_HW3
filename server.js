@@ -88,8 +88,8 @@ router.post('/signin', function (req, res) {
 //movies get method for getting a movie, saving a movie, updateing a movie, and deleting a movie.
 router.route('/movies')
     //getting movies request to get the movies.
-    //.get(authJwtController.isAuthenticated, function (req, res) {
-    .get(function (req, res) {
+    .get(authJwtController.isAuthenticated, function (req, res) {
+    //.get(function (req, res) {
         Movie.find({Title: req.body.Title},
             function(err, var1){
 
@@ -108,8 +108,8 @@ router.route('/movies')
                 }});
         })
     //putting movies request to update movies
-    //.put(authJwtController.isAuthenticated, function(req,res) {
-    .put(function(req,res) {
+    .put(authJwtController.isAuthenticated, function(req,res) {
+    //.put(function(req,res) {
 
         if(req.body.Title != null && req.body.Year!= null && req.body.Genre != null  && req.body.Actors != null  && req.body.Actors.length >= 3){
 
@@ -129,8 +129,8 @@ router.route('/movies')
         //res.json(o);
     })
     //post movies request to save movies..
-    //.post(authJwtController.isAuthenticated, function (req, res) {
-    .post(function (req, res) {
+    .post(authJwtController.isAuthenticated, function (req, res) {
+    //.post(function (req, res) {
 
         if(req.body.Actors.length < 3){res.status(400).json({message: "not enough entries (3 actors needed)..."});
         }else{Movie.find({Title: req.body.Title},
@@ -158,8 +158,8 @@ router.route('/movies')
     })
 
     //delete movies request to delete movies
-    //.delete(authJwtController.isAuthenticated, function(req,res){
-    .delete(function(req,res){
+    .delete(authJwtController.isAuthenticated, function(req,res){
+    //.delete(function(req,res){
 
         Movie.findOneAndDelete({Title: req.body.Title}, function(err, cont1){
             if(err){ res.status(400).json({message:err});}
