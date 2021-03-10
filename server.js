@@ -101,7 +101,7 @@ router.route('/movies')
                     //res.json(o);
                     res.status(400).json({message: "Query not valid..."});}
 
-                else if(var1.length == 0) {  res.status(400).json({message: var1});}
+                else if(var1.length === 0) {  res.status(400).json({message: var1.length});}
                 else{
                     //status: 200, message: "GET movies", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
                     res.json({var1: var1, message: "Movie entered has been found."});
