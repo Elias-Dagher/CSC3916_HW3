@@ -99,7 +99,7 @@ router.route('/movies')
                     //}
                     //var o = getJSONObjectForMovieRequirement(req);
                     //res.json(o);
-                    res.status(400).json({request: req, message: "Request not valid..."});}
+                    res.status(400).json({message: "Request not valid..."});}
 
                 else if(var1.length === 0) {  res.status(400).json({var1: var1, message: "Movie not found, empty list..." });}
                 else{
@@ -116,27 +116,27 @@ router.route('/movies')
             Movie.findOneAndUpdate({Title:req.body.Title}, {
                 Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre,Actors: req.body.Actors},function(err, cont1){
                 if(err){res.json({message: err});}
-                else if (cont1 == null){res.json({request: req, message:"Cannot find movie..."})}
+                else if (cont1 == null){res.json({message:"Cannot find movie..."})}
                 else{  res.json({var1: cont1, message:"movie has been updated"})}
                 //status: 200, message: "movie updated", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
             });}
 
-        else { res.status(400).json({request: req, message: "empty entry..."}); }
+        else { res.status(400).json({message: "empty entry..."}); }
         //if (req.get('Content-Type')) {
         //res = res.type(req.get('Content-Type'));
         //}
         //var o = getJSONObjectForMovieRequirement(req);
         //res.json(o);
     })
-    //post movies request to save movies
+    //post movies request to save movies..
     //.post(authJwtController.isAuthenticated, function (req, res) {
     .post(function (req, res) {
 
-        if(req.body.Actors.length < 3){res.status(400).json({request: req, message: "not enough entries (3 actors needed)..."});
+        if(req.body.Actors.length < 3){res.status(400).json({message: "not enough entries (3 actors needed)..."});
         }else{Movie.find({Title: req.body.Title},
 
             function(err, var1){
-                if(err){res.status(400).json({request: req, message: "something went wrong..."});}
+                if(err){res.status(400).json({message: "something went wrong..."});}
                 else if(var1.length === 0) {
 
                     let mov = new Movie({Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre, Actors: req.body.Actors});
@@ -147,7 +147,7 @@ router.route('/movies')
                             // status: 200, message: "movie saved", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
                         }else{res.json({message: "movie saved to DB..."});}});
                 }
-                else {res.status(400).json({request: req, message: "This movie already exists in the DB..."});}
+                else {res.status(400).json({ message: "Movie already exists in DB"});}
                 //if (req.get('Content-Type')) {
                 //res = res.type(req.get('Content-Type'));
                 //}
@@ -168,8 +168,8 @@ router.route('/movies')
                 //}
                 //var o = getJSONObjectForMovieRequirement(req);
             //res.json(o);
-            else if (cont1 == null){res.json({request: req, message: "cannot find movie in DB..."});}
-            else{res.json({request: req, message: "movie deleted from our DB..."});
+            else if (cont1 == null){res.json({message: "cannot find movie in DB..."});}
+            else{res.json({message: "movie deleted from our DB..."});
                 //status: 200, message: "movie deleted", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
             }
         });
