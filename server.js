@@ -92,23 +92,20 @@ router.route('/movies')
     .get(function (req, res) {
             Movie.find({Title: req.body.Title}, function(err, data){
 
-                if(data.length == 0){
+                if(err){
                     //if (req.get('Content-Type')) {
                     //res = res.type(req.get('Content-Type'));
                     //}
                     //var o = getJSONObjectForMovieRequirement(req);
                     //res.json(o);
-                    res.status(400).json({message: "No entry found"});
+                    res.status(400).json({message: "Query not valid..."});}
 
-                }else if(err) { res.status(400).json({message: "Invalid query"});
-                }else{
+                else if(data.length == 0) {  res.status(400).json({message: "No such entry..."});}
+                else{
                     //status: 200, message: "GET movies", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
-                    res.json({data: data, message: "Movie Found"});
-                }
-
-            });
-        }
-    )
+                    res.json({data: data, message: "Movie entered has been found."});
+                }});
+        })
     //putting movies request to update movies
     //.put(authJwtController.isAuthenticated, function(req,res) {
     .put(function(req,res) {
@@ -116,11 +113,10 @@ router.route('/movies')
         if(req.body.Title != null && req.body.Year!= null && req.body.Genre != null  && req.body.Actors != null  && req.body.Actors.length >= 3){
 
             Movie.findOneAndUpdate({Title:req.body.Search}, {
-                Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre,Actors: req.body.Actors},function(err, doc){
-
-                if(doc == null){res.json({message:"Cannot find movie..."})}
-                else if (err){res.json({message: err});}
-                else{  res.json({data: doc, message:"movie has been updated"})}
+                Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre,Actors: req.body.Actors},function(err, cont1){
+                if(err){res.json({message: err});}
+                else if (cont1 == null){res.json({message:"Cannot find movie..."})}
+                else{  res.json({data: cont1, message:"movie has been updated"})}
                 //status: 200, message: "movie updated", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
             });}
 
@@ -164,14 +160,14 @@ router.route('/movies')
     //.delete(authJwtController.isAuthenticated, function(req,res){
     .delete(function(req,res){
 
-        Movie.findOneAndDelete({Title: req.body.Title}, function(err, doc){
+        Movie.findOneAndDelete({Title: req.body.Title}, function(err, cont1){
             if(err){ res.status(400).json({message:err});}
                 //if (req.get('Content-Type')) {
                 //res = res.type(req.get('Content-Type'));
                 //}
                 //var o = getJSONObjectForMovieRequirement(req);
             //res.json(o);
-            else if (doc == null){res.json({message: "cannot find movie..."});}
+            else if (cont1 == null){res.json({message: "cannot find movie..."});}
             else{res.json({message: "movie deleted..."});
                 //status: 200, message: "movie deleted", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
             }
