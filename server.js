@@ -113,7 +113,7 @@ router.route('/movies')
 
         if(req.body.Title != null && req.body.Year!= null && req.body.Genre != null  && req.body.Actors != null  && req.body.Actors.length >= 3){
 
-            Movie.findOneAndUpdate({Title:req.body.search}, {
+            Movie.findOneAndUpdate({Title:req.body.Title}, {
                 Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre,Actors: req.body.Actors},function(err, cont1){
                 if(err){res.json({message: err});}
                 else if (cont1 == null){res.json({message:"Cannot find movie..."})}
@@ -145,7 +145,7 @@ router.route('/movies')
                     mov.save(function(err){
                         if(err) {res.json({message: err});
                             // status: 200, message: "movie saved", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
-                        }else{res.json({msg: "movie saved..."});}});
+                        }else{res.json({message: "movie saved..."});}});
                 }
                 else {res.status(400).json({message: "Movie duplicate, error..."});}
                 //if (req.get('Content-Type')) {
