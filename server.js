@@ -90,7 +90,7 @@ router.route('/movies')
     //getting movies request to get the movies.
     //.get(authJwtController.isAuthenticated, function (req, res) {
     .get(function (req, res) {
-            Movie.find({Title: req.body.Title}, function(err, data){
+            Movie.find({Title: req.body.Title}, function(err, var1){
 
                 if(err){
                     //if (req.get('Content-Type')) {
@@ -100,10 +100,10 @@ router.route('/movies')
                     //res.json(o);
                     res.status(400).json({message: "Query not valid..."});}
 
-                else if(data.length == 0) {  res.status(400).json({message: "No such entry..."});}
+                else if(var1.length == 0) {  res.status(400).json({message: var1});}
                 else{
                     //status: 200, message: "GET movies", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
-                    res.json({data: data, message: "Movie entered has been found."});
+                    res.json({var1: var1, message: "Movie entered has been found."});
                 }});
         })
     //putting movies request to update movies
@@ -116,7 +116,7 @@ router.route('/movies')
                 Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre,Actors: req.body.Actors},function(err, cont1){
                 if(err){res.json({message: err});}
                 else if (cont1 == null){res.json({message:"Cannot find movie..."})}
-                else{  res.json({data: cont1, message:"movie has been updated"})}
+                else{  res.json({var1: cont1, message:"movie has been updated"})}
                 //status: 200, message: "movie updated", headers: req.headers, query: req.query, env: process.env.UNIQUE_KEY
             });}
 
@@ -134,9 +134,9 @@ router.route('/movies')
         if(req.body.Actors.length < 3){res.status(400).json({message: "not enough entries (3 actors needed)..."});
         }else{Movie.find({Title: req.body.Title},
 
-            function(err, data){
+            function(err, var1){
                 if(err){res.status(400).json({message: "something went wrong..."});}
-                else if(data.length == 0) {
+                else if(var1.length == 0) {
 
                     let mov = new Movie({Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre, Actors: req.body.Actors});
                     console.log(req.body);
