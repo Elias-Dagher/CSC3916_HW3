@@ -13,7 +13,7 @@ db = require('./db')(); //hack
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
-//var Movie = require('./movies');
+var Movie = require('./movies');
 var app = express();
 
 app.use(cors());
@@ -113,10 +113,10 @@ router.route('/movies')
     //.put(authJwtController.isAuthenticated, function(req,res) {
     .put(function(req,res) {
 
-        if(req.body.Actors != null  && req.body.Year != null && req.body.Genre != null && req.body.Title != null && req.body.Actors.length >= 3){
+        if(req.body.Title != null && req.body.Year!= null && req.body.Genre != null  && req.body.Actors != null  && req.body.Actors.length >= 3){
 
             Movie.findOneAndUpdate({Title:req.body.Search}, {
-                Actors: req.body.Actors, Year: req.body.Year, Genre: req.body.Genre, Title: req.body.Title},function(err, doc){
+                Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre,Actors: req.body.Actors},function(err, doc){
 
                 if(doc == null){res.json({message:"Cannot find movie..."})}
                 else if (err){res.json({message: err});}
