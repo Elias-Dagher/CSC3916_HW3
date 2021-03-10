@@ -90,7 +90,8 @@ router.route('/movies')
     //getting movies request to get the movies.
     //.get(authJwtController.isAuthenticated, function (req, res) {
     .get(function (req, res) {
-            Movie.find({Title: req.body.Title}, function(err, var1){
+        Movie.find({Title: req.body.Title},
+            function(err, var1){
 
                 if(err){
                     //if (req.get('Content-Type')) {
@@ -112,7 +113,7 @@ router.route('/movies')
 
         if(req.body.Title != null && req.body.Year!= null && req.body.Genre != null  && req.body.Actors != null  && req.body.Actors.length >= 3){
 
-            Movie.findOneAndUpdate({Title:req.body.Search}, {
+            Movie.findOneAndUpdate({Title:req.body.search}, {
                 Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre,Actors: req.body.Actors},function(err, cont1){
                 if(err){res.json({message: err});}
                 else if (cont1 == null){res.json({message:"Cannot find movie..."})}
