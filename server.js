@@ -164,7 +164,7 @@ router.route('/movies')
                 if(err){res.status(400).json({message: "something went wrong..."});}
                 else if(var1.length === 0) {
 
-                    let mov = new Movie({Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre, Actors: req.body.Actors});
+                    let mov = new Movie({Title: req.body.Title, Year: req.body.Year, Genre: req.body.Genre, Actors: req.body.Actors, ImageURI: req.body.ImageURI});
                     console.log(req.body);
 
                     mov.save(function(err){
