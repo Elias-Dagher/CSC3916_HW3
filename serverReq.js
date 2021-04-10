@@ -10,7 +10,10 @@ var MovCategory = new Schema({
     Year: {type:Date, required:true},
     Genre: {type:String, required:true, enum:["Action", "Comedy", "Drama", "Horror", "Thriller", "Sci-fi"]},
     Actors: {type:[{ActorName:String, CharacterName:String}], required:true},
-        ImageURI: {type:String, required: false}});
+    ImageURI: {type:String, required: false},
+    avgRating: {type:Number, required: false}
+
+});
 
 
 var Movie = mongoose.model('Movie', MovCategory);

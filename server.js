@@ -217,8 +217,12 @@ router.route('/reviews')
                             if(err){res.status(400).json({message: "Something went wrong..."});}
                             else{
                                 var vars1 = 0;
-                                vars2.forEach(function (review) {vars1 += review.Rating; console.log(review);});
-                                vars1 = vars1 /vars2.length;
+                                vars2.forEach(function (review) {
+                                    vars1 += review.Rating;
+                                    console.log(review);
+                                });
+                                vars1 = vars1 / vars2.length;
+
                                 Movie.update({ _id: req.body.Movie_ID}, {$set: {averageRating: vars1}},
                                     function (err, doc){
                                         if (err){res.json({error: err});}
