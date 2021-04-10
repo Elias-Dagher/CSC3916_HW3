@@ -223,7 +223,8 @@ router.route('/reviews')
                                 });
                                 vars1 = vars1 / vars2.length;
 
-                                Movie.update({ _id: req.body.Movie_ID}, {$set: {avgRating: vars1}},
+                                Movie.updateOne({ _id: req.body.Movie_ID},
+                                    {$set: {avgRating: vars1}},
                                     function (err, doc){
                                         if (err){res.json({error: err});}
                                         else if(doc != null){res.json({msg: "Success, Review Added."});}
